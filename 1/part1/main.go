@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	f, err := os.Open("input")
+	f, err := os.Open("../input")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,6 +45,14 @@ func main() {
 
 			currElfCalories += val
 		}
+	}
+
+	// last time since there's no newline at the end of the file
+	fmt.Printf("elf #%d has %d calories\n", currElfNum, currElfCalories)
+	if currElfCalories > richestElfCalories {
+		richestElfNum = currElfNum
+		richestElfCalories = currElfCalories
+		// fmt.Println("-- this elf is the new richest elf")
 	}
 
 	if err := scanner.Err(); err != nil {
