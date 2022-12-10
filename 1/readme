@@ -1,0 +1,3 @@
+- read input file
+- sum each group of numbers; groups are seperated by two newlines
+- return group # with largest sum (1-indexed) 
