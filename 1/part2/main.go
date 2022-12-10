@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-// slow, but my computer is fast
+// slow, but very fast in the grand scheme of things
 func keep3RichestElves(richestElves []int, candidateCalories int) []int {
 	richestElves = append(richestElves, candidateCalories)
 
