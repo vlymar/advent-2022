@@ -20,7 +20,6 @@ require 'set'
 
 # part2 - change 4 to 14 lol
 
-
 input = ''
 File.open('6/input.txt', 'r') do |f|
   input = f.read
