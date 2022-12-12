@@ -30,24 +30,33 @@
 
 THRESHOLD = 100_000
 
-running_total = 0
+# part2
+# find the smallest dir you can delete to free up enough space for the update
+TOTAL_SPACE = 70_000_000
+REQUIRED_FREE_SPACE = 30_000_000
+
+#
+# running_total = 0 # part1
 
 stack = []
 
-File.open('7/sample_input.txt', 'r') do |f|
+visited_dirs = []
+
+File.open('7/input.txt', 'r') do |f|
   f.each_line do |line|
-    p line
 
     case line
     when /\$ cd \.\./
       visited = stack.shift
       stack.first[:size] += visited[:size]
-      running_total += visited[:size] if visited[:size] <= THRESHOLD
+      # running_total += visited[:size] if visited[:size] <= THRESHOLD # part 1
+      visited_dirs << visited
     when /^\$ cd .+/
       dirname = /cd (.+)/.match(line)[1]
       stack.unshift({ dir: dirname, size: 0 })
     when /^\$ ls/, /^dir/
       # noop
+      next
     when /^\d+/
       filesize = /^(\d+)/.match(line)[1]
       stack.first[:size] += filesize.to_i
@@ -55,20 +64,42 @@ File.open('7/sample_input.txt', 'r') do |f|
       raise("unhandled input: #{line}")
     end
 
-    puts stack
-    puts
+    # puts line
+    # puts stack
+    # puts
   end
 end
 
 # the user doesn't cd .. to all the way back out after completing traversal so we simulate it here to make sure
 # we don't miss any dirs smaller than the threshold
-p "final stage"
+puts 'final stage'
+required_space = 0
 until stack.empty?
   visited = stack.shift
-  stack.first[:size] += visited[:size] unless stack.empty?
-  running_total += visited[:size] if visited[:size] <= THRESHOLD
-  p stack
+  visited_dirs << visited
+  if stack.empty? # we just popped root dir
+    required_space = REQUIRED_FREE_SPACE - (TOTAL_SPACE - visited[:size])
+  else
+    stack.first[:size] += visited[:size]
+  end
+
+  # running_total += visited[:size] if visited[:size] <= THRESHOLD # part 1
 end
 
-# output running total
-p running_total
+# puts "all dirs:"
+# puts visited_dirs
+#
+# deletable_dirs =
+#   visited_dirs.filter { |d| d[:size] >= required_space }
+#
+# puts
+# puts 'deletable dirs:'
+# puts deletable_dirs
+
+smallest_deletable_dir =
+  visited_dirs.filter { |d| d[:size] >= required_space }
+              .min_by { |d| d[:size] }
+
+puts
+puts "Required space: #{required_space}"
+puts "Smallest deletable dir: #{smallest_deletable_dir}"
