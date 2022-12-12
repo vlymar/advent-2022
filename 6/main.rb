@@ -18,6 +18,7 @@ require 'set'
 #   - if no dup detected, return curr idx+1
 # picking this option because my computer is fast
 
+# part2 - change 4 to 14 lol
 
 
 input = ''
@@ -30,9 +31,9 @@ window = []
 
 chars.each_with_index do |c, i|
   window << c
-  next if window.size < 4
+  next if window.size < 14
 
-  if window.to_set.size == 4
+  if window.to_set.size == 14
     #   we found marker, return idx+1
     puts "marker complete after #{i+1} chars"
     return
