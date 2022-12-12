@@ -44,7 +44,46 @@ def parse_stacks(lines)
 end
 
 def parse_moves(lines)
+  moves = []
 
+  lines.map do |line|
+    quant, source, dest = /move (\d+) from (\d+) to (\d)/.match(line).captures
+
+    moves << [quant.to_i, source.to_i, dest.to_i]
+  end
+
+  moves
+end
+
+def apply_moves_part_1(stacks, moves)
+  # puts "starting moves ---"
+  moves.each do |quant, source, dest|
+    # p "applying move #{[quant, source, dest]}"
+    quant.times do
+      container = stacks[source - 1].shift
+      stacks[dest - 1].unshift(container)
+    end
+
+    # p "stacks: #{stacks}"
+  end
+
+  stacks
+end
+
+def apply_moves_part_2(stacks, moves)
+  # puts "starting moves ---"
+  moves.each do |quant, source, dest|
+    # p "applying move #{[quant, source, dest]}"
+    containers = stacks[source - 1].shift(quant)
+    stacks[dest - 1].unshift(containers).flatten!
+    # p "stacks: #{stacks}"
+  end
+
+  stacks
+end
+
+def read_top(stacks)
+  stacks.map(&:first).join
 end
 
 def parse_input(filename)
@@ -71,6 +110,11 @@ def parse_input(filename)
   [stacks, moves]
 end
 
-stack_lines, move_lines = parse_input('5/sample_input.txt')
+stack_lines, move_lines = parse_input('5/input.txt')
 
-p parse_stacks(stack_lines)
+stacks = parse_stacks(stack_lines)
+moves = parse_moves(move_lines)
+restacked = apply_moves_part_2(stacks, moves)
+
+p read_top(restacked)
+
