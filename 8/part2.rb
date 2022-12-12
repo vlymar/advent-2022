@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# frozen_string_literal: true
-
-
 # heavyweight but i want to remember how to use objects in ruby
 class Tree
   attr_reader :height
