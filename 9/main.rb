@@ -13,8 +13,21 @@ require 'set'
 # R 1
 # ...
 
-h_coords = [0, 0]
-t_coords = [0, 0]
+# part2
+# there are now 10 knots (H, 8 knots and T)
+# each knot follows the knot in front of it using part1 rules
+
+# part1
+# h_coords = [0, 0]
+# t_coords = [0, 0]
+
+NUM_KNOTS = 10
+
+knots = []
+NUM_KNOTS.times do
+  knots << [0, 0]
+end
+
 visited_t_coords = Set.new
 
 # returns a move vector and dist
@@ -81,37 +94,26 @@ end
 File.open('9/input.txt', 'r') do |f|
   f.each_line do |line|
     vector, dist = parse_move(line)
-    # p "move vector: #{vector}, dist: #{dist}"
 
+    ## part 1
+    # dist.times do
+    #   h_coords = apply_move(h_coords, vector)
+    #   t_coords = recalc_tail_coords(h_coords, t_coords)
+    #   visited_t_coords.add(t_coords)
+    # end
+
+    # part 2
     dist.times do
-      h_coords = apply_move(h_coords, vector)
-      # p "new H coords: #{h_coords}"
-      t_coords = recalc_tail_coords(h_coords, t_coords)
-      # p "new T coords #{t_coords}"
-      visited_t_coords.add(t_coords)
+      knots[0] = apply_move(knots[0], vector)
+
+      (1...knots.length).each do | i|
+        knots[i] = recalc_tail_coords(knots[i-1], knots[i])
+      end
+
+      visited_t_coords.add(knots[-1])
     end
   end
 end
-
-# p recalc_tail_coords([0, 0], [0, 0])
-# p recalc_tail_coords([0, 1], [0, 0])
-# p recalc_tail_coords([1, 1], [0, 0])
-# p recalc_tail_coords([1, 0], [0, 0])
-# p recalc_tail_coords([1, -1], [0, 0])
-# p recalc_tail_coords([0, -1], [0, 0])
-# p recalc_tail_coords([-1, -1], [0, 0])
-# p recalc_tail_coords([-1, 0], [0, 0])
-# p recalc_tail_coords([-1, 1], [0, 0])
-# puts
-# p recalc_tail_coords([0, 2], [0, 0])
-# p recalc_tail_coords([2, 1], [0, 0])
-# p recalc_tail_coords([2, 0], [0, 0])
-# p recalc_tail_coords([2, -1], [0, 0])
-# p recalc_tail_coords([0, -2], [0, 0])
-# p recalc_tail_coords([-2, -1], [0, 0])
-# p recalc_tail_coords([-2, 0], [0, 0])
-# p recalc_tail_coords([-2, 1], [0, 0])
-
 
 # output visited set count
 puts "num visited T positions: #{visited_t_coords.size}"
